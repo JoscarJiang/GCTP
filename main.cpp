@@ -33,7 +33,7 @@ int main() {
 	TradeApi->Init();
 	
 	TradeStrategy* TS = new TradeStrategy;
-	TS->trade();
+	//TS->trade();
 
 	
 	// 连接运行

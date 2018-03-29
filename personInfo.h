@@ -4,7 +4,7 @@
 #include "CustomTradeSpi.h"
 #include "RecordManagement/InfoRecord.h"
 #include "CommandManagement/CommandQueue.h"
-#include "RecordManagement.h"
+#include "RecordManagement/RecordManagement.h"
 
 #ifndef _a
 #define _a
@@ -18,7 +18,7 @@ extern TThostFtdcPasswordType InvestorPassword;                   // 投资者密码
 // 行情参数
 extern CThostFtdcMdApi *MarketApi;                                // 行情指针
 extern char MdFrontAddr[];                                        // 模拟行情前置地址
-extern char Inid[4][7];
+extern char Inid[2][31];
 extern char *InstrumentID[];                                      // 行情合约代码列表，中、上、大、郑交易所各选一种
 extern int instrumentNum;                                         // 行情合约订阅
 #endif

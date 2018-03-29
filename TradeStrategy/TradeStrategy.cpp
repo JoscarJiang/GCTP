@@ -1,5 +1,5 @@
 #include "TradeStrategy.h"
-#include "../InstrumentData.h"
+#include "../RecordManagement/InstrumentData.h"
 TradeStrategy::TradeStrategy(){
 
 }
@@ -12,14 +12,9 @@ void TradeStrategy::trade() {
 	TThostFtdcInstrumentIDType B_name = "ni1807";
 	InstrumentData A(A_name);
 	InstrumentData B(B_name);
-
+	
+	// 进入交易策略循环
 	while (1) {
-		CThostFtdcDepthMarketDataField *temp = new CThostFtdcDepthMarketDataField;
-		TThostFtdcInstrumentIDType instrumentID  = "au1806";
-		TThostFtdcPriceType price = 0;
-		TThostFtdcVolumeType volume = 100 ;
-		if (temp->LastPrice < temp->AskPrice1) {
-			TradeSpi->reqOrderInsert(instrumentID, temp->AskPrice1, volume, THOST_FTDC_D_Buy);
-		}
+
 	}
 }

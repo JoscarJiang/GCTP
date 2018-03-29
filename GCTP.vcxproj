@@ -125,11 +125,11 @@
     <ClCompile Include="CommandManagement\QryTradingAccountCommand.cpp" />
     <ClCompile Include="CustomMdSpi.cpp" />
     <ClCompile Include="CustomTradeSpi.cpp" />
-    <ClCompile Include="InstrumentData.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="personInfo.cpp" />
-    <ClCompile Include="RecordManagement.cpp" />
     <ClCompile Include="RecordManagement\InfoRecord.cpp" />
+    <ClCompile Include="RecordManagement\InstrumentData.cpp" />
+    <ClCompile Include="RecordManagement\RecordManagement.cpp" />
     <ClCompile Include="TradeStrategy\TradeStrategy.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -143,10 +143,10 @@
     <ClInclude Include="CommandManagement\QryTradingAccountCommand.h" />
     <ClInclude Include="CustomMdSpi.h" />
     <ClInclude Include="CustomTradeSpi.h" />
-    <ClInclude Include="InstrumentData.h" />
     <ClInclude Include="personInfo.h" />
-    <ClInclude Include="RecordManagement.h" />
     <ClInclude Include="RecordManagement\InfoRecord.h" />
+    <ClInclude Include="RecordManagement\InstrumentData.h" />
+    <ClInclude Include="RecordManagement\RecordManagement.h" />
     <ClInclude Include="TradeStrategy\TradeStrategy.h" />
   </ItemGroup>
   <ItemGroup>

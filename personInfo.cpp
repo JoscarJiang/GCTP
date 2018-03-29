@@ -7,8 +7,8 @@ TThostFtdcPasswordType InvestorPassword = "19960122";              // 投资者密码
 																	// 行情参数
 CThostFtdcMdApi *MarketApi = nullptr;                              // 行情指针
 char MdFrontAddr[] = "tcp://180.168.146.187:10010";                // 模拟行情前置地址
-char Inid[4][7] = { "TF1706", "zn1705", "au1806", "CF705" };
-char *InstrumentID[] = { Inid[0], Inid[1], Inid[2], Inid[3] };     // 行情合约代码列表，中、上、大、郑交易所各选一种
+char Inid[2][31] = { "au1806", "ni1807" };
+char *InstrumentID[] = { Inid[0], Inid[1]};     // 行情合约代码列表，中、上、大、郑交易所各选一种
 int instrumentNum = 4;                                             // 行情合约订阅数量
 
 																	// 交易参数

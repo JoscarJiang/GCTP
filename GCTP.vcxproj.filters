@@ -54,9 +54,6 @@
     <ClCompile Include="CommandManagement\InsertOrderCommand.cpp">
       <Filter>源文件\CommandManagement</Filter>
     </ClCompile>
-    <ClCompile Include="RecordManagement\InfoRecord.cpp">
-      <Filter>源文件\RecordManagement</Filter>
-    </ClCompile>
     <ClCompile Include="CommandManagement\LoginCommand.cpp">
       <Filter>源文件\CommandManagement</Filter>
     </ClCompile>
@@ -75,10 +72,13 @@
     <ClCompile Include="TradeStrategy\TradeStrategy.cpp">
       <Filter>源文件\TradeStrategy</Filter>
     </ClCompile>
-    <ClCompile Include="InstrumentData.cpp">
+    <ClCompile Include="RecordManagement\InfoRecord.cpp">
       <Filter>源文件\RecordManagement</Filter>
     </ClCompile>
-    <ClCompile Include="RecordManagement.cpp">
+    <ClCompile Include="RecordManagement\InstrumentData.cpp">
+      <Filter>源文件\RecordManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordManagement\RecordManagement.cpp">
       <Filter>源文件\RecordManagement</Filter>
     </ClCompile>
   </ItemGroup>
@@ -91,9 +91,6 @@
     </ClInclude>
     <ClInclude Include="CustomTradeSpi.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="RecordManagement\InfoRecord.h">
-      <Filter>头文件\RecordManagement</Filter>
     </ClInclude>
     <ClInclude Include="CommandManagement\ApiCommand.h">
       <Filter>头文件\CommandManagement</Filter>
@@ -122,10 +119,13 @@
     <ClInclude Include="CommandManagement\QryPositionCommand.h">
       <Filter>头文件\CommandManagement</Filter>
     </ClInclude>
-    <ClInclude Include="InstrumentData.h">
+    <ClInclude Include="RecordManagement\InfoRecord.h">
       <Filter>头文件\RecordManagement</Filter>
     </ClInclude>
-    <ClInclude Include="RecordManagement.h">
+    <ClInclude Include="RecordManagement\InstrumentData.h">
+      <Filter>头文件\RecordManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordManagement\RecordManagement.h">
       <Filter>头文件\RecordManagement</Filter>
     </ClInclude>
   </ItemGroup>

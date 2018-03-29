@@ -1,5 +1,5 @@
 #include "InstrumentData.h"
-#include "personInfo.h"
+#include "../personInfo.h"
 
 InstrumentData::InstrumentData(TThostFtdcInstrumentIDType InstrumentID){
 	strcpy_s(this->InstrumentID,InstrumentID);

@@ -7,7 +7,7 @@
 ÈÕÆÚ£º     2018.3.28
 */
 
-#include "CTPapi\ThostFtdcUserApiStruct.h"
+#include "../CTPapi/ThostFtdcUserApiStruct.h"
 #include <stack>
 #include <mutex>
 class InstrumentData {

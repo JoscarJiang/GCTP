@@ -7,7 +7,7 @@
 ÈÕÆÚ£º     2018.3.29
 */
 
-#include "CTPapi\ThostFtdcUserApiStruct.h"
+#include "../CTPapi/ThostFtdcUserApiStruct.h"
 #include "InstrumentData.h"
 #include <vector>
 
