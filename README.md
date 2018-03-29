@@ -18,4 +18,4 @@ define the global variables.
 | record  | ✓ |
 | RecordManagement  | ✓ |
 | Generalization | `TODO` |
-| add  | `TODO` |
+| add more  | `TODO` |
