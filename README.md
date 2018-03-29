@@ -9,3 +9,13 @@ the class RecordManagement works as an interface between CustomMdSpi and Instrum
 
 ## personInfo
 define the global variables.
+
+## Schedule
+
+| Task | Done |
+| ---  | :---: |
+| Printer  | ✓ |
+| record  | ✓ |
+| RecordManagement  | ✓ |
+| Generalization | `TODO` |
+| add  | `TODO` |
