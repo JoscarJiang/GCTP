@@ -52,3 +52,14 @@ void RecordManagement::time_to_update_instr_data(CThostFtdcDepthMarketDataField 
 		}
 	}
 }
+
+CThostFtdcDepthMarketDataField* RecordManagement::fetch_data(TThostFtdcInstrumentIDType InstrID) {
+	for (unsigned int i = 0; i < instr_pool.size(); i++) {
+		if (!_stricmp(InstrID, instr_pool[i]->InstrumentID)) {
+			if (instr_pool[i]->data_history.size() > 0) {
+				return instr_pool[i]->get_data();
+			}
+		}
+	}
+	return NULL;
+}

@@ -37,5 +37,4 @@ CThostFtdcDepthMarketDataField* InstrumentData::get_data() {
 	// 读数据前上锁，离开解锁，离开后update_data可以访问data_history
 	std::lock_guard<std::mutex> lock(InstrMutex);
 	return data_history.top();
-
 }

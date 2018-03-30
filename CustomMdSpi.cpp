@@ -156,10 +156,12 @@ void CustomMdSpi::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMar
 		<< pDepthMarketData->Turnover << std::endl;
 	outFile.close();
 	*/
-
-	RManagement->time_to_update_instr_data(pDepthMarketData); // 更新数据
-	QueryPerformanceCounter(&Mlitmp);
-	MQPart1 = Mlitmp.QuadPart;// 获得初始值
+	if (!pDepthMarketData) {
+		RManagement->time_to_update_instr_data(pDepthMarketData); // 更新数据
+		QueryPerformanceCounter(&Mlitmp);
+		MQPart1 = Mlitmp.QuadPart;// 获得初始值
+	}
+	
 };
 void CustomMdSpi::OnRtnForQuoteRsp(CThostFtdcForQuoteRspField *pForQuoteRsp) {
 	std::cout << "===== Quotation Responce =====" << std::endl;

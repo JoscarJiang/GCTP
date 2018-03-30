@@ -33,6 +33,9 @@ public:
 	//行情接口和InstrumentData类的数据通道，选择对应的Instrument对象更新数据
 	void time_to_update_instr_data(CThostFtdcDepthMarketDataField *input);
 
+	//Strategy里调用获取数据
+	CThostFtdcDepthMarketDataField* fetch_data(TThostFtdcInstrumentIDType InstrID);
+
 	std::vector<InstrumentData*> instr_pool;
 
 	CThostFtdcDepthMarketDataField *data;
