@@ -17,10 +17,8 @@ extern TThostFtdcPasswordType InvestorPassword;                   // Í¶×ÊÕßÃÜÂë
 #define _b
 // ĞĞÇé²ÎÊı
 extern CThostFtdcMdApi *MarketApi;                                // ĞĞÇéÖ¸Õë
+extern CustomMdSpi *MarketSpi;
 extern char MdFrontAddr[];                                        // Ä£ÄâĞĞÇéÇ°ÖÃµØÖ·
-extern char Inid[2][31];
-extern char *InstrumentID[];                                      // ĞĞÇéºÏÔ¼´úÂëÁĞ±í£¬ÖĞ¡¢ÉÏ¡¢´ó¡¢Ö£½»Ò×Ëù¸÷Ñ¡Ò»ÖÖ
-extern int instrumentNum;                                         // ĞĞÇéºÏÔ¼¶©ÔÄ
 #endif
 
 #ifndef _c
@@ -28,7 +26,6 @@ extern int instrumentNum;                                         // ĞĞÇéºÏÔ¼¶©Ô
 // ½»Ò×²ÎÊı
 extern CThostFtdcTraderApi *TradeApi;                             // ½»Ò×Ö¸Õë
 extern char TradeFrontAddr[];                                     // Ä£Äâ½»Ò×Ç°ÖÃµØÖ·
-extern TThostFtdcInstrumentIDType TradeInstrumentID;              // Ëù½»Ò×µÄºÏÔ¼´úÂë
 extern TThostFtdcDirectionType gTradeDirection;                   // ÂòÂô·½Ïò
 extern TThostFtdcPriceType gLimitPrice;                           // ½»Ò×¼Û¸ñ
 extern CustomTradeSpi *TradeSpi;

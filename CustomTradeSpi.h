@@ -61,7 +61,11 @@ public:
 	///请求查询投资者持仓明细响应
 	void OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	
-
+	/*自己的函数*/
+	void settlementConfirmReq();
+	void instrumentReq(TThostFtdcInstrumentIDType InstrumentID);
+	void postionReq(TThostFtdcInstrumentIDType InstrumentID);
+	void tradingAccountReq();
 public:
 	bool loginFlag; // 登陆成功的标识
 	int requestID;

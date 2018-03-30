@@ -6,8 +6,8 @@
 
 class CustomMdSpi : public CThostFtdcMdSpi
 {
-	// ---- 继承自CTP父类的回调接口并实现 ---- //
 public:
+	/*************继承自CTP父类的回调接口并实现*************/
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
 	CustomMdSpi();
 	virtual ~CustomMdSpi();
@@ -53,8 +53,10 @@ public:
 	///询价通知
 	void OnRtnForQuoteRsp(CThostFtdcForQuoteRspField *pForQuoteRsp);
 
+	/*************自己的函数*************/
+	/// 被 RecordManagement调用， 获取市场信息
+	void subscribe_market_data(char** InstrumentID, int instrumentNum);
 public:
 	std::ofstream TimeFile;
-	//api请求队列
 	
 };

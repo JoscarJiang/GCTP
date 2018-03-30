@@ -32,7 +32,7 @@ CustomTradeSpi:: ~CustomTradeSpi() {
 }
 
 /****************************Api交易函数****************************************/
-// 登录
+// 登录(Init自动调用)
 void CustomTradeSpi::OnFrontConnected()
 {
 	std::cout << "===== Trader Api Connection Established =====" << std::endl;
@@ -44,117 +44,47 @@ void CustomTradeSpi::OnFrontConnected()
 	CQueue->addCommand(command);
 }
 
-// 登录成功后结算确认
-void CustomTradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-{
-	if (!isErrorRspInfo(pRspInfo))
-	{
-		std::cout << "===== Account Login Successfully =====" << std::endl;
-		loginFlag = true;
-		std::cout << ">>> Date: " << pRspUserLogin->TradingDay << std::endl;
-		std::cout << ">>> Login Time: " << pRspUserLogin->LoginTime << std::endl;
-		std::cout << ">>> BrokerID:  " << pRspUserLogin->BrokerID << std::endl;
-		std::cout << ">>> UserID:  " << pRspUserLogin->UserID << std::endl;
-
-		// 保存会话参数
-		trade_front_id = pRspUserLogin->FrontID;
-		session_id = pRspUserLogin->SessionID;
-		strcpy_s(order_ref, pRspUserLogin->MaxOrderRef);
-
-		// 投资者结算结果确认
-		CThostFtdcSettlementInfoConfirmField *settlementConfirmReq = new CThostFtdcSettlementInfoConfirmField;
-		strcpy_s(settlementConfirmReq->BrokerID, BrokerID);
-		strcpy_s(settlementConfirmReq->InvestorID, InvestorID);
-		std::shared_ptr<ApiCommand> command = std::make_shared<ComfirmSettlementCommand>(TradeApi, settlementConfirmReq, requestID);
-		CQueue->addCommand(command);
-	}
-	else {
-		std::cout << "===== Account Login Fail =====" << std::endl;
-	}
+// 结算确认（手动调用，下同）
+void CustomTradeSpi::settlementConfirmReq() {
+	// 投资者结算结果确认
+	CThostFtdcSettlementInfoConfirmField *settlementConfirmReq = new CThostFtdcSettlementInfoConfirmField;
+	strcpy_s(settlementConfirmReq->BrokerID, BrokerID);
+	strcpy_s(settlementConfirmReq->InvestorID, InvestorID);
+	std::shared_ptr<ApiCommand> command = std::make_shared<ComfirmSettlementCommand>(TradeApi, settlementConfirmReq, requestID);
+	CQueue->addCommand(command);
 }
 
-// 结算确认成功则查询合约
-void CustomTradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	if (!isErrorRspInfo(pRspInfo))
-	{
-		std::cout << "===== 投资者结算结果确认成功 =====" << std::endl;
-		std::cout << "确认日期： " << pSettlementInfoConfirm->ConfirmDate << std::endl;
-		std::cout << "确认时间： " << pSettlementInfoConfirm->ConfirmTime << std::endl;
-		
-		// 请求查询合约
-		CThostFtdcQryInstrumentField *instrumentReq = new CThostFtdcQryInstrumentField;
-		strcpy_s(instrumentReq->InstrumentID, TradeInstrumentID);
-		std::shared_ptr<ApiCommand> command = std::make_shared<QryInstrumentCommand>(TradeApi, instrumentReq, requestID);
-		CQueue->addCommand(command);
-	}
-};
-
-// 查询合约成功则查询资金账户
-void CustomTradeSpi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	if (!isErrorRspInfo(pRspInfo) && pInstrument)
-	{
-		std::cout << "===== 查询合约结果成功 =====" << std::endl;
-		std::cout << "交易所代码： " << pInstrument->ExchangeID << std::endl;
-		std::cout << "合约代码： " << pInstrument->InstrumentID << std::endl;
-		std::cout << "合约在交易所的代码： " << pInstrument->ExchangeInstID << std::endl;
-		std::cout << "执行价： " << pInstrument->StrikePrice << std::endl;
-		std::cout << "到期日： " << pInstrument->EndDelivDate << std::endl;
-		std::cout << "当前交易状态： " << pInstrument->IsTrading << std::endl;
-		
-		// 请求查询投资者资金账户
-		CThostFtdcQryTradingAccountField *tradingAccountReq = new CThostFtdcQryTradingAccountField;
-		strcpy_s(tradingAccountReq->BrokerID, BrokerID);
-		strcpy_s(tradingAccountReq->InvestorID, InvestorID);
-		std::shared_ptr<ApiCommand> command = std::make_shared<QryTradingAccountCommand>(TradeApi, tradingAccountReq, requestID);
-		CQueue->addCommand(command);
-	}
+// 查询合约
+void CustomTradeSpi::instrumentReq(TThostFtdcInstrumentIDType InstrumentID) {
+	// 请求查询合约
+	CThostFtdcQryInstrumentField *instrumentReq = new CThostFtdcQryInstrumentField;
+	strcpy_s(instrumentReq->InstrumentID, InstrumentID);
+	std::shared_ptr<ApiCommand> command = std::make_shared<QryInstrumentCommand>(TradeApi, instrumentReq, requestID);
+	CQueue->addCommand(command);
 }
 
-// 查询资金账户成功则查询客户总体持仓情况
-void CustomTradeSpi::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	if (!isErrorRspInfo(pRspInfo)) {
-		std::cout << "=====查询投资者资金账户成功=====" << std::endl;
-		std::cout << "投资者账号： " << pTradingAccount->AccountID << std::endl;
-		std::cout << "可用资金： " << pTradingAccount->Available << std::endl;
-		std::cout << "可取资金： " << pTradingAccount->WithdrawQuota << std::endl;
-		std::cout << "当前保证金: " << pTradingAccount->CurrMargin << std::endl;
-		std::cout << "平仓盈亏： " << pTradingAccount->CloseProfit << std::endl;
-		info_record->update_person_info(pTradingAccount);
-		// 请求查询投资者持仓
-		CThostFtdcQryInvestorPositionField *postionReq = new CThostFtdcQryInvestorPositionField;
-		strcpy_s(postionReq->BrokerID, BrokerID);
-		strcpy_s(postionReq->InvestorID, InvestorID);
-		strcpy_s(postionReq->InstrumentID, TradeInstrumentID);
-		std::shared_ptr<ApiCommand> command = std::make_shared<QryPositionCommand>(TradeApi, postionReq, requestID);
-		CQueue->addCommand(command);
-	}
+// 查询资金账户
+void CustomTradeSpi::tradingAccountReq() {
+	// 请求查询投资者资金账户
+	CThostFtdcQryTradingAccountField *tradingAccountReq = new CThostFtdcQryTradingAccountField;
+	strcpy_s(tradingAccountReq->BrokerID, BrokerID);
+	strcpy_s(tradingAccountReq->InvestorID, InvestorID);
+	std::shared_ptr<ApiCommand> command = std::make_shared<QryTradingAccountCommand>(TradeApi, tradingAccountReq, requestID);
+	CQueue->addCommand(command);
 }
 
-// 查询客户总体持仓情况则报单录入
-void CustomTradeSpi::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	if (!isErrorRspInfo(pRspInfo))
-	{
-		std::cout << "===== 查询投资者持仓成功 =====" << std::endl;
-		if (pInvestorPosition)
-		{
-			std::cout << "合约代码： " << pInvestorPosition->InstrumentID << std::endl;
-			std::cout << "开仓价格： " << pInvestorPosition->OpenAmount << std::endl;
-			std::cout << "开仓量： " << pInvestorPosition->OpenVolume << std::endl;
-			std::cout << "开仓方向： " << pInvestorPosition->PosiDirection << std::endl;
-			std::cout << "占用保证金：" << pInvestorPosition->UseMargin << std::endl;
-		}
-		else
-			std::cout << "----->该合约未持仓" << std::endl;
-
-		// 策略交易
-		std::cout << "===== 开始进入策略 =====" << std::endl;
-		TThostFtdcPriceType price = 280.00;
-		reqOrderInsert(TradeInstrumentID, price, 1, THOST_FTDC_D_Buy);
-		//StrategyCheckAndTrade(TradeInstrumentID, this);
-
-	}
+// 查询客户总体持仓情况
+void CustomTradeSpi::postionReq(TThostFtdcInstrumentIDType InstrumentID){
+	// 请求查询投资者持仓
+	CThostFtdcQryInvestorPositionField *postionReq = new CThostFtdcQryInvestorPositionField;
+	strcpy_s(postionReq->BrokerID, BrokerID);
+	strcpy_s(postionReq->InvestorID, InvestorID);
+	strcpy_s(postionReq->InstrumentID, InstrumentID);
+	std::shared_ptr<ApiCommand> command = std::make_shared<QryPositionCommand>(TradeApi, postionReq, requestID);
+	CQueue->addCommand(command);
 }
 
+// 报单插入
 void CustomTradeSpi::reqOrderInsert(TThostFtdcInstrumentIDType instrumentID, TThostFtdcPriceType price, TThostFtdcVolumeType volume, TThostFtdcDirectionType direction)
 {
 	CThostFtdcInputOrderField orderInsertReq;
@@ -204,6 +134,90 @@ void CustomTradeSpi::reqOrderInsert(TThostFtdcInstrumentIDType instrumentID, TTh
 	std::shared_ptr<ApiCommand> command = std::make_shared<InsertOrderCommand>(TradeApi, &orderInsertReq, requestID);
 	CQueue->addCommand(command);
 }
+
+// 登录成功后回复
+void CustomTradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	if (!isErrorRspInfo(pRspInfo))
+	{
+		std::cout << "===== Account Login Successfully =====" << std::endl;
+		loginFlag = true;
+		std::cout << ">>> Date: " << pRspUserLogin->TradingDay << std::endl;
+		std::cout << ">>> Login Time: " << pRspUserLogin->LoginTime << std::endl;
+		std::cout << ">>> BrokerID:  " << pRspUserLogin->BrokerID << std::endl;
+		std::cout << ">>> UserID:  " << pRspUserLogin->UserID << std::endl;
+
+		// 保存会话参数
+		trade_front_id = pRspUserLogin->FrontID;
+		session_id = pRspUserLogin->SessionID;
+		strcpy_s(order_ref, pRspUserLogin->MaxOrderRef);
+	}
+	else {
+		std::cout << "===== Account Login Fail =====" << std::endl;
+	}
+}
+
+// 结算确认成功
+void CustomTradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	if (!isErrorRspInfo(pRspInfo))
+	{
+		std::cout << "===== 投资者结算结果确认成功 =====" << std::endl;
+		std::cout << "确认日期： " << pSettlementInfoConfirm->ConfirmDate << std::endl;
+		std::cout << "确认时间： " << pSettlementInfoConfirm->ConfirmTime << std::endl;
+	}
+};
+
+// 查询合约成功则查询资金账户
+void CustomTradeSpi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	if (!isErrorRspInfo(pRspInfo) && pInstrument)
+	{
+		std::cout << "===== 查询合约结果成功 =====" << std::endl;
+		std::cout << "交易所代码： " << pInstrument->ExchangeID << std::endl;
+		std::cout << "合约代码： " << pInstrument->InstrumentID << std::endl;
+		std::cout << "合约在交易所的代码： " << pInstrument->ExchangeInstID << std::endl;
+		std::cout << "执行价： " << pInstrument->StrikePrice << std::endl;
+		std::cout << "到期日： " << pInstrument->EndDelivDate << std::endl;
+		std::cout << "当前交易状态： " << pInstrument->IsTrading << std::endl;
+	}
+}
+
+// 查询资金账户成功则查询客户总体持仓情况
+void CustomTradeSpi::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	if (!isErrorRspInfo(pRspInfo) && pTradingAccount) {
+		std::cout << "=====查询投资者资金账户成功=====" << std::endl;
+		std::cout << "投资者账号： " << pTradingAccount->AccountID << std::endl;
+		std::cout << "可用资金： " << pTradingAccount->Available << std::endl;
+		std::cout << "可取资金： " << pTradingAccount->WithdrawQuota << std::endl;
+		std::cout << "当前保证金: " << pTradingAccount->CurrMargin << std::endl;
+		std::cout << "平仓盈亏： " << pTradingAccount->CloseProfit << std::endl;
+		info_record->update_person_info(pTradingAccount);
+
+	}
+}
+
+// 查询客户总体持仓情况则报单录入
+void CustomTradeSpi::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	if (!isErrorRspInfo(pRspInfo))
+	{
+		std::cout << "===== 查询投资者持仓成功 =====" << std::endl;
+		if (pInvestorPosition)
+		{
+			std::cout << "合约代码： " << pInvestorPosition->InstrumentID << std::endl;
+			std::cout << "开仓价格： " << pInvestorPosition->OpenAmount << std::endl;
+			std::cout << "开仓量： " << pInvestorPosition->OpenVolume << std::endl;
+			std::cout << "开仓方向： " << pInvestorPosition->PosiDirection << std::endl;
+			std::cout << "占用保证金：" << pInvestorPosition->UseMargin << std::endl;
+		}
+		else
+			std::cout << "----->该合约未持仓" << std::endl;
+
+		//reqOrderInsert(TradeInstrumentID, price, 1, THOST_FTDC_D_Buy);
+		//StrategyCheckAndTrade(TradeInstrumentID, this);
+
+	}
+}
+
+
 
 
 void CustomTradeSpi::OnFrontDisconnected(int nReason)
@@ -336,8 +350,8 @@ void CustomTradeSpi::OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderActio
 ///合约交易状态通知 jc 
 void CustomTradeSpi::OnRtnInstrumentStatus(CThostFtdcInstrumentStatusField *pInstrumentStatus) { 
 	if (pInstrumentStatus) {
-	std::cout << "ExchangeID: " << pInstrumentStatus->ExchangeID << std::endl;///交易所代码
-	std::cout << "ExchangeInstID: " << pInstrumentStatus->ExchangeInstID << std::endl;///合约在交易所的代码
+	//std::cout << "ExchangeID: " << pInstrumentStatus->ExchangeID << std::endl;///交易所代码
+	//std::cout << "ExchangeInstID: " << pInstrumentStatus->ExchangeInstID << std::endl;///合约在交易所的代码
 	//std::cout << pInstrumentStatus->SettlementGroupID << std::endl;///结算组代码
 	std::cout << "InstrumentID: " << pInstrumentStatus->InstrumentID << std::endl;///合约代码
 	std::cout << "Status: " << pInstrumentStatus->InstrumentStatus << std::endl;	///合约交易状态
@@ -348,8 +362,10 @@ void CustomTradeSpi::OnRtnInstrumentStatus(CThostFtdcInstrumentStatusField *pIns
 	//#define THOST_FTDC_IER_Manual '2'
 	///熔断
 	//#define THOST_FTDC_IER_Fuse '3'
-	std::cout << "The Time into The Status: " << pInstrumentStatus->EnterTime << std::endl;///进入本状态时间
-	std::cout << "Reason: " << pInstrumentStatus->EnterReason << std::endl;///进入本状态原因
+
+	/*这里被注释了*/
+	//std::cout << "The Time into The Status: " << pInstrumentStatus->EnterTime << std::endl;///进入本状态时间
+	//std::cout << "Reason: " << pInstrumentStatus->EnterReason << std::endl;///进入本状态原因
 
 	}
 };

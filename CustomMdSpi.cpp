@@ -50,17 +50,24 @@ void CustomMdSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CTh
 		std::cout << ">>> Time:" << pRspUserLogin->LoginTime << std::endl;
 		std::cout << ">>> Broker:" << pRspUserLogin->BrokerID << std::endl;
 		std::cout << ">>> User:" << pRspUserLogin->UserID << std::endl;
-		
-		//sub market data
-		int rt = MarketApi->SubscribeMarketData(InstrumentID, instrumentNum);
-		if (!rt)
-			std::cout << ">>> Subscribe request sent" << std::endl;
-		else
-			std::cout << ">>> Subscribe request failed" << std::endl;
+
+		RManagement->MarketIsConnected = 1;
 	}
 	else
 		std::cerr << ">>> Return Error. ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg" << pRspInfo->ErrorMsg << std::endl;
 };
+
+void CustomMdSpi::subscribe_market_data(char** InstrumentID,int instrumentNum) {
+
+	std::cout << InstrumentID[0] << std::endl;
+	std::cout << InstrumentID[1] << std::endl;
+	int rt = MarketApi->SubscribeMarketData(InstrumentID, instrumentNum);
+	if (!rt)
+		std::cout << ">>> Subscribe request sent" << std::endl;
+	else
+		std::cout << ">>> Subscribe request failed" << std::endl;
+
+}
 
 void CustomMdSpi::OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	bool bResult = pRspInfo && (pRspInfo->ErrorID != 0);

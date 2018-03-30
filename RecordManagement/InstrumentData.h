@@ -5,6 +5,7 @@
 使用位置： CustomMdSpi类、TradeStrategy类
 创建人：   姜淇川
 日期：     2018.3.28
+最近更新： 2018.3.30
 */
 
 #include "../CTPapi/ThostFtdcUserApiStruct.h"

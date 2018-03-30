@@ -3,10 +3,10 @@
 
 InstrumentData::InstrumentData(TThostFtdcInstrumentIDType InstrumentID){
 	strcpy_s(this->InstrumentID,InstrumentID);
-	RManagement->collect_instrID(this);
 }
 
 InstrumentData::~InstrumentData() {
+	std::cout<<"get out"<<std::endl;
 	// 清空data_history，释放空间，此处也可以直接写入
 	for (;!data_history.empty();) {
 		CThostFtdcDepthMarketDataField *data = data_history.top();
