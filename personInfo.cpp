@@ -1,20 +1,20 @@
 #include "personInfo.h"
 
-TThostFtdcBrokerIDType BrokerID = "9999";                          // Ä£Äâ¾­¼ÍÉÌ´úÂë
-TThostFtdcInvestorIDType InvestorID = "112502";                    // Í¶×ÊÕßÕË»§Ãû
-TThostFtdcPasswordType InvestorPassword = "19960122";              // Í¶×ÊÕßÃÜÂë
+TThostFtdcBrokerIDType BrokerID = "9999";                          // æ¨¡æ‹Ÿç»çºªå•†ä»£ç 
+TThostFtdcInvestorIDType InvestorID = "  ";                    // æŠ•èµ„è€…è´¦æˆ·å
+TThostFtdcPasswordType InvestorPassword = "  ";              // æŠ•èµ„è€…å¯†ç 
 
-// ĞĞÇé²ÎÊı
-CThostFtdcMdApi *MarketApi = nullptr;                              // ĞĞÇéÖ¸Õë
+// è¡Œæƒ…å‚æ•°
+CThostFtdcMdApi *MarketApi = nullptr;                              // è¡Œæƒ…æŒ‡é’ˆ
 CustomMdSpi *MarketSpi = new CustomMdSpi;
-char MdFrontAddr[] = "tcp://180.168.146.187:10011";                // Ä£ÄâĞĞÇéÇ°ÖÃµØÖ·
+char MdFrontAddr[] = "tcp://180.168.146.187:10011";                // æ¨¡æ‹Ÿè¡Œæƒ…å‰ç½®åœ°å€
 
 
-// ½»Ò×²ÎÊı
-CThostFtdcTraderApi *TradeApi = nullptr;                           // ½»Ò×Ö¸Õë
-char TradeFrontAddr[] = "tcp://180.168.146.187:10001";             // Ä£Äâ½»Ò×Ç°ÖÃµØÖ·
-TThostFtdcDirectionType gTradeDirection = THOST_FTDC_D_Sell;       // ÂòÂô·½Ïò
-TThostFtdcPriceType gLimitPrice = 22735;                           // ½»Ò×¼Û¸ñ
+// äº¤æ˜“å‚æ•°
+CThostFtdcTraderApi *TradeApi = nullptr;                           // äº¤æ˜“æŒ‡é’ˆ
+char TradeFrontAddr[] = "tcp://180.168.146.187:10001";             // æ¨¡æ‹Ÿäº¤æ˜“å‰ç½®åœ°å€
+TThostFtdcDirectionType gTradeDirection = THOST_FTDC_D_Sell;       // ä¹°å–æ–¹å‘
+TThostFtdcPriceType gLimitPrice = 22735;                           // äº¤æ˜“ä»·æ ¼
 
 CommandQueue* CQueue = new CommandQueue;  
 InfoRecord* info_record = new InfoRecord;
